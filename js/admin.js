@@ -1,37 +1,26 @@
-import { supabase } from "./supabaseClient.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
 
-// Check if user is logged in and is admin
-async function checkAdmin() {
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
+<h2>Admin Dashboard</h2>
+<button id="logout-btn">Logout</button>
 
-  if (!user) {
-    // Not logged in
-    window.location.href = "login.html";
-    return;
-  }
+<div id="content">
+  <p>Loading admin info...</p>
+</div>
 
-  // Check admin role
-  const { data, error } = await supabase
-    .from("admins")
-    .select("role")
-    .eq("id", user.id)
-    .single();
+<script type="module" src="js/admin.js"></script>
+<script>
+  // Attach logout function to button
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    logout();
+  });
+</script>
 
-  if (error || !data || data.role !== "admin") {
-    // Not an admin
-    window.location.href = "login.html";
-    return;
-  }
-
-  // Show admin content
-  document.getElementById("content").innerHTML = `Welcome, ${user.email}`;
-}
-
-// Logout function
-window.logout = async function() {
-  await supabase.auth.signOut();
-  window.location.href = "login.html";
-};
-
-// Run the check when page loads
-checkAdmin();
+</body>
+</html>
