@@ -1,4 +1,3 @@
-// js/login.js
 import { supabase } from "./supabaseClient.js";
 
 async function login() {
@@ -6,12 +5,12 @@ async function login() {
   const password = document.getElementById("password").value;
 
   const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password
+    email,
+    password
   });
 
   if (error) {
-    alert("Login failed.");
+    alert("Login failed: " + error.message);
     return;
   }
 

@@ -1,21 +1,37 @@
-import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+import { supabase } from "./supabaseClient.js";
 
-const supabase = createClient("https://fnyrptzgafykvhzibjed.supabase.co", "sb_publishable_G_BA6XtU28JCcP0XaifoXw_A8VvBrst")
+// Check if user is logged in and is admin
+async function checkAdmin() {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    // Not logged in
+    window.location.href = "login.html";
+    return;
+  }
 
-// Not logged in
-if (!user) {
-  window.location.href = "login.html"
+  // Check admin role
+  const { data, error } = await supabase
+    .from("admins")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !data || data.role !== "admin") {
+    // Not an admin
+    window.location.href = "login.html";
+    return;
+  }
+
+  // Show admin content
+  document.getElementById("content").innerHTML = `Welcome, ${user.email}`;
 }
 
-// Check admin role
-const { data, error } = await supabase
-  .from("admins")
-  .select("role")
-  .eq("id", user.id)
-  .single()
+// Logout function
+window.logout = async function() {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+};
 
-if (!data || data.role !== "admin") {
-  window.location.href = "login.html"
-}
+// Run the check when page loads
+checkAdmin();
