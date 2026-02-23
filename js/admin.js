@@ -1,26 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
+import { supabase } from "./supabaseClient.js";
 
-<h2>Admin Dashboard</h2>
-<button id="logout-btn">Logout</button>
+async function checkAdmin() {
+  // Get current session
+  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-<div id="content">
-  <p>Loading admin info...</p>
-</div>
+  if (sessionError || !session) {
+    window.location.href = "login.html";
+    return;
+  }
 
-<script type="module" src="js/admin.js"></script>
-<script>
-  // Attach logout function to button
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    logout();
-  });
-</script>
+  const user = session.user;
 
-</body>
-</html>
+  // Check admin role
+  const { data, error } = await supabase
+    .from("admins")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !data || data.role !== "admin") {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("content").innerHTML = `Welcome, ${user.email}`;
+}
+
+// Logout function
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "login.html";
+}
+
+window.logout = logout;
+
+// Run on page load
+checkAdmin();
