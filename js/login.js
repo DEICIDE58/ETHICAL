@@ -9,13 +9,18 @@ async function login() {
 
   if (error) {
     errorDiv.textContent = "Login failed: " + error.message;
+
+    setTimeout(() => {
+      errorDiv.textContent = "";
+    }, 2000);
+
     return;
   }
 
-  // Clear any previous errors
+  // Clear any previous errors immediately
   errorDiv.textContent = "";
 
-  // Wait a tiny bit for session to be saved, then redirect
+  // Delay, then redirect
   setTimeout(() => {
     window.location.href = "admin.html";
   }, 200);
