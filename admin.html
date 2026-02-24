@@ -10,9 +10,10 @@
 <h2>Admin Dashboard</h2>
 <button onclick="logout()">Logout</button>
 
-<div id="content">
-  <p>Loading admin info...</p>
-</div>
+<div id="loader">Checking admin access...</div>
+
+<!-- Hide in case of error -->
+<div id="content" style="display: none;"></div>
 
 <script type="module" src="js/admin.js"></script>
 </body>

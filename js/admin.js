@@ -1,7 +1,10 @@
 import { supabase } from "./supabaseClient.js";
 
 async function checkAdmin() {
-  // Get current session
+  const loader = document.getElementById("loader");
+  const content = document.getElementById("content");
+
+  // current session
   const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
   if (sessionError || !session) {
@@ -23,7 +26,10 @@ async function checkAdmin() {
     return;
   }
 
-  document.getElementById("content").innerHTML = `Welcome, ${user.email}`;
+  // if verified as admin
+  loader.style.display = "none";  
+  content.style.display = "block"; 
+  content.innerHTML = `Welcome, ${user.email}`;
 }
 
 // Logout function
