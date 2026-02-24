@@ -10,19 +10,22 @@ async function login() {
 
   if (error) {
     errorDiv.textContent = "Login failed: " + error.message;
+    errorDiv.style.opacity = 1;
 
     setTimeout(() => {
-      errorDiv.textContent = "";
+      errorDiv.style.opacity = 0;
     }, 2000);
 
     return;
   }
 
-  // Clear any previous errors immediately
-  errorDiv.textContent = "";
+  // Clear previous errors
+  errorDiv.style.opacity = 0;
 
-  // Delay, then redirect
+  //  success 
   successDiv.textContent = "Login successful!";
+  successDiv.style.opacity = 1;
+
   setTimeout(() => {
     window.location.href = "admin.html";
   }, 200);
