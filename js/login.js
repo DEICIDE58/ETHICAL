@@ -4,6 +4,7 @@ async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   const errorDiv = document.getElementById("login-error");
+  const successDiv = document.getElementById("login-success");
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
@@ -21,6 +22,7 @@ async function login() {
   errorDiv.textContent = "";
 
   // Delay, then redirect
+  successDiv.textContent = "Login successful!";
   setTimeout(() => {
     window.location.href = "admin.html";
   }, 200);
